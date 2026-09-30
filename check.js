@@ -36,8 +36,16 @@ assert.match(page, /internship/);
 assert.doesNotMatch(page.slice(0, page.indexOf("<section")), /<h1|Seattle|<img/);
 const home = context.homeHtml();
 assert.match(home, /images\/world.svg/);
-assert.equal((home.match(/<a /g) || []).length, 1);
+assert.equal((home.match(/<a /g) || []).length, context.pages().length);
 assert.match(home, /href="city.html\?city=seattle"/);
+assert.match(home, /href="city.html\?city=chicago"/);
+const chicago = cities.find((city) => city.slug === "chicago");
+assert.match(chicago.blurb, /Michelle's apartment/);
+assert.match(chicago.blurb, /lived there for 3 years/);
+const zoo = chicago.sections.flatMap((section) => section.spots).find((spot) => spot.name === "Lincoln Park Zoo");
+assert.match(zoo.note, /just sit and read then walk around and look at animals/);
+assert.match(zoo.note, /3 times/);
+assert.ok(chicago.sections.some((section) => section.title === "Museum Campus" && section.spots.length === 3));
 assert.match(home, /class="pin-name">Chicago</);
 assert.match(home, /class="pin-name">Puerto Vallarta</);
 for (const city of cities) {
@@ -53,7 +61,7 @@ for (const city of cities) {
     }
   }
 }
-assert.equal(context.pages().length, 1);
+assert.equal(context.pages().length, 2);
 
 const cluster = [
   { left: 100, top: 80, right: 120, bottom: 100 },
