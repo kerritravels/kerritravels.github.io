@@ -2,11 +2,12 @@
 //
 // A page is one block in the list below.
 // 1. Put photos in images/<slug>/
-// 2. Copy the Seattle block. Set name, slug, lat, lng, label, and blurb.
+// 2. Copy a city block. Set name, slug, lat, lng, label, and blurb.
 //    label is where the name sits on the map: n, s, e, w, ne, nw, se, sw.
-// 3. Add spots. name is required. note and photo are optional.
-//    Skip the period at the end of a note.
-//    { name: "Place name", note: "short note", photo: "images/chicago/place.jpg" },
+// 3. A section is a title and spots. A spot is words, plus a picture if you have one.
+//    { name: "Place name", note: "short note", photo: "images/seattle/place.jpg" },
+//    Leave photo off for words only. A section note sits above the spots.
+//    lines: true puts each name and note on one line, like the NYC food list.
 // A pin with no page is one line. Look up lat/lng, pick a label, refresh.
 // { name: "Banff", lat: 51.18, lng: -115.57, label: "n" },
 
@@ -80,10 +81,10 @@ const cities = [
         spots: [
           { name: "Millennium Park", note: "the Bean, walk around and take pictures", photo: "images/chicago/millennium-park.jpg" },
           { name: "Navy Pier", note: "walk around and take pictures, pretty skyline" },
-          { name: "Riverwalk", note: "cafes, bars, and shops along the river, Tiny Tap is an easy place to sit", photo: "images/chicago/riverwalk.jpg" },
           { name: "Lakefront Trail", note: "walk, bike, or run, jump in the lake if it's nice, and there are beaches to sit at in summer and fall" },
           { name: "Garfield Park Conservatory", note: "free, reserve ahead", photo: "images/chicago/garfield-conservatory.jpg" },
           { name: "Lincoln Park Zoo", note: "My favorite spot in Chicago! It's a free park and you can just sit and read then walk around and look at animals. I think I went a total of 3 times.", photo: "images/chicago/lincoln-park-zoo.jpg" },
+          { name: "Riverwalk", note: "cafes, bars, and shops along the river, Tiny Tap is an easy place to sit", photo: "images/chicago/riverwalk.jpg" },
         ],
       },
       {
@@ -125,7 +126,95 @@ const cities = [
     ],
   },
   { name: "Puerto Vallarta", lat: 20.65, lng: -105.23, label: "w" },
-  { name: "NYC", lat: 40.71, lng: -74.01, label: "e" },
+  {
+    name: "NYC",
+    slug: "nyc",
+    lat: 40.71,
+    lng: -74.01,
+    label: "e",
+    blurb: "Lived here for the summer of 2024 and 2026, but have been visiting at least twice a year ever since my sister started living here in 2021. Take the subway and walk! Don't take an Uber even to the airport.",
+    sections: [
+      {
+        title: "Places",
+        spots: [
+          { name: "Riverside Park", note: "My favorite park in the entire world. Sit on a bench and read, or eat banh mi from Saiguette. In the fall, and watching kids play after school, peak happiness.", photo: "images/nyc/riverside-park.jpg" },
+          { name: "Central Park", note: "Bike the 6 mile loop or walk around Belvedere Castle, Bow Bridge, or the Great Lawn. SummerStage and Shakespeare in the Park during the summer.", photo: "images/nyc/central-park.jpg" },
+          { name: "Bryant Park", note: "Christmas markets or summer movie nights.", photo: "images/nyc/bryant-park.jpg" },
+          { name: "High Line", note: "Chelsea Market, the High Line, and Little Island. I recommend biking the West Side Highway too. The High Line was our afternoon walk.", photo: "images/nyc/high-line.jpg" },
+          { name: "New York Botanical Garden", note: "Best to go in the spring. Next to the zoo, which I liked as well.", photo: "images/nyc/botanical-garden.jpg" },
+          { name: "Empire State Building", note: "I can take you up for free, so don't go yourself. Summit One is much better and you get a view of the Empire State Building.", photo: "images/nyc/empire-state.jpg" },
+          { name: "Governors Island", note: "No one talks about this place but I love it. Take a ferry, only a 5 minute ride, and get a close view of the Statue of Liberty. There's Citi Bike, so I bike the perimeter in an hour. There's an art walk and hammocks too.", photo: "images/nyc/governors-island.jpg" },
+          { name: "Brooklyn Bridge Park", note: "And walk the Brooklyn Bridge.", photo: "images/nyc/brooklyn-bridge.jpg" },
+          { name: "Roosevelt Island", note: "Take the tram. Views of the city on a nice day. We also went in winter and it was miserable.", photo: "images/nyc/roosevelt-island.jpg" },
+          { name: "Brooklyn Botanic Garden", note: "Highly recommend the Christmas light show.", photo: "images/nyc/brooklyn-botanical.jpg" },
+          { name: "The Strand", note: "The bookstore that got me into reading. Huge, then read in Washington Square Park afterwards.", photo: "images/nyc/the-strand.jpg" },
+          { name: "Biddy's", note: "I suck at trivia, so I play bingo on Wednesday nights instead.", photo: "images/nyc/biddys.jpg" },
+        ],
+      },
+      {
+        title: "Museums",
+        spots: [
+          { name: "The Met", note: "Allocate at least 3 hours, and don't skip the Impressionism section.", photo: "images/nyc/the-met.jpg" },
+          { name: "The Met Cloisters", note: "About an hour by subway and bus, but so worth it for the architecture.", photo: "images/nyc/met-cloisters.jpg" },
+          { name: "The Frick", note: "Free first Fridays. A taste of how rich people are on the Upper East Side.", photo: "images/nyc/the-frick.jpg" },
+          { name: "The Morgan Library", photo: "images/nyc/morgan-library.jpg" },
+          { name: "Guggenheim", note: "Only go if the exhibit is good. The spiral is nice, but that's about it, since it's all modern art.", photo: "images/nyc/guggenheim.jpg" },
+          { name: "American Museum of Natural History", note: "Fun if you're already in the area. The lobby is where everyone takes pictures, so you don't even need to go in, though I would, it's fun.", photo: "images/nyc/natural-history.jpg" },
+          { name: "Noguchi Museum", note: "All about his sculptures, not lanterns. Go when there's a tour.", photo: "images/nyc/noguchi.jpg" },
+        ],
+      },
+      {
+        title: "Broadway",
+        spots: [
+          { name: "Wicked", note: "The definition of a Broadway musical, don't skip." },
+          { name: "Book of Mormon", note: "Catchy songs and so funny." },
+          { name: "Hamilton", note: "Exactly like the Disney Plus version, so only pay if you're a super fan, which I am, because tickets are $200+.", photo: "images/nyc/hamilton.jpg" },
+        ],
+      },
+      {
+        title: "Events",
+        spots: [
+          { name: "NYC Ballet", note: "30 under 30.", photo: "images/nyc/nyc-ballet.jpg" },
+          { name: "Coney Island", note: "Free fireworks every Friday in summer. The closest I've been to fireworks, and the boardwalk. We rode the Thunderbolt.", photo: "images/nyc/coney-island.jpg" },
+          { name: "US Open", note: "Fan week, free tickets to the qualifying rounds. Our favorite event of the summer.", photo: "images/nyc/us-open.jpg" },
+          { name: "concert at MSG" },
+          { name: "Yankees", note: "The subway goes right there." },
+          { name: "Mets", note: "We went later in the season when they were already out of the playoffs and had a $10 food voucher. Tickets were $16.", photo: "images/nyc/mets.jpg" },
+          { name: "Sleep No More", note: "The most insane experience. An interactive show where you chase the actors and no one talks, in an abandoned hotel. They're closed now, but hopefully they come back.", photo: "images/nyc/sleep-no-more.jpg" },
+        ],
+      },
+      {
+        title: "Food",
+        note: "full food ranking and pictures on my beli: https://beliapp.co/app/kerrizhang",
+        lines: true,
+        spots: [
+          { name: "pizza", note: "lucia pizza but everyone loves lindustrie" },
+          { name: "bagel", note: "popup bagels but justin likes apollo more" },
+          { name: "korean", note: "olle, andamiro" },
+          { name: "thai", note: "fish cheeks" },
+          { name: "chinese", note: "nai brother LiC, 1915 lanzhou, laoma spicy" },
+          { name: "japanese", note: "toribro ramen, konban" },
+          { name: "italian", note: "san sabino" },
+          { name: "halal", note: "adels or shwarma bay" },
+          { name: "indian", note: "semma" },
+          { name: "mexican", note: "rey de reyes, los tacos no 1" },
+          { name: "bar", note: "tomi jazz" },
+          { name: "dessert", note: "myka" },
+        ],
+      },
+      {
+        title: "Day trips",
+        spots: [
+          { name: "Cold Spring", note: "Cute town from the train station, and a tough hike.", photo: "images/nyc/cold-spring.jpg" },
+          { name: "New Canaan", note: "Grace Farms.", photo: "images/nyc/grace-farms.jpg" },
+          { name: "New Haven", note: "Frank Pepe pizza and Yale, the rare book library.", photo: "images/nyc/new-haven.jpg" },
+          { name: "Untermyer Gardens", note: "A rich guy's private garden, now free. About 1.5 hours by train and walking from the city.", photo: "images/nyc/untermyer.jpg" },
+          { name: "Wave Hill", note: "A nature oasis on the Hudson. There's a free shuttle from the train station.", photo: "images/nyc/wave-hill.jpg" },
+          { name: "Where to stay", note: "NYC doesn't allow Airbnbs. Find a hotel in Soho, all roads lead back to Soho, or anywhere close to a subway. Don't stay in Times Square or Harlem." },
+        ],
+      },
+    ],
+  },
   { name: "SF", lat: 37.77, lng: -122.42, label: "w" },
   { name: "South America", lat: -15.6, lng: -58.2, label: "e" },
   { name: "Mexico City", lat: 19.43, lng: -99.13, label: "e" },

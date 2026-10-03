@@ -28,19 +28,42 @@ function figureHtml(spot) {
   return `<figure><img src="${esc(spot.photo)}" alt="${esc(spot.name)}"><figcaption><strong>${esc(spot.name)}</strong>${note}</figcaption></figure>`;
 }
 
-function plainHtml(spot) {
+function textHtml(spot) {
   const note = spot.note ? `<span>${esc(spot.note)}</span>` : "";
-  return `<li><strong>${esc(spot.name)}</strong>${note}</li>`;
+  return `<div class="spot"><strong>${esc(spot.name)}</strong>${note}</div>`;
+}
+
+function linkText(value) {
+  return esc(value).replace(/https?:\/\/[^\s<]+/g, (url) => `<a href="${url}">${url}</a>`);
+}
+
+function linesHtml(spots) {
+  return `<ul class="favorites">${spots.map((spot) => {
+    const note = spot.note ? `<span>${esc(spot.note)}</span>` : "";
+    return `<li><strong>${esc(spot.name)}</strong>${note}</li>`;
+  }).join("")}</ul>`;
 }
 
 function sectionHtml(section) {
   const spots = section.spots || [];
-  const photos = spots.filter((spot) => spot.photo);
-  const rest = spots.filter((spot) => !spot.photo);
-  const shots = photos.length ? `<div class="shots">${photos.map(figureHtml).join("")}</div>` : "";
-  const plain = rest.length ? `<ul class="plain">${rest.map(plainHtml).join("")}</ul>` : "";
-  if (!shots && !plain) return "";
-  return `<section class="recs"><h2>${esc(section.title)}</h2>${shots}${plain}</section>`;
+  let body = "";
+  if (section.lines) {
+    body = spots.length ? linesHtml(spots) : "";
+  } else {
+    let index = 0;
+    while (index < spots.length) {
+      if (spots[index].photo) {
+        const photos = [];
+        while (index < spots.length && spots[index].photo) photos.push(spots[index++]);
+        body += `<div class="shots">${photos.map(figureHtml).join("")}</div>`;
+      } else {
+        while (index < spots.length && !spots[index].photo) body += textHtml(spots[index++]);
+      }
+    }
+  }
+  const note = section.note ? `<p class="section-note">${linkText(section.note)}</p>` : "";
+  if (!body && !note) return "";
+  return `<section class="recs"><h2>${esc(section.title)}</h2>${note}${body}</section>`;
 }
 
 function pinHtml(place) {

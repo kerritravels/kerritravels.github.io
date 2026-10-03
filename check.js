@@ -11,8 +11,8 @@ const cities = vm.runInContext("cities", context);
 const seattle = cities.find((city) => city.slug === "seattle");
 const food = context.sectionHtml(seattle.sections.find((section) => section.title === "Food"));
 assert.match(food, /<img src="images\/seattle\/malatang.jpg"/);
-assert.match(food, /<ul class="plain">[\s\S]*Dough Zone/);
-assert.doesNotMatch(food, /<img[^>]+>[\s\S]{0,80}Dough Zone/);
+assert.match(food, /<div class="spot"><strong>Dough Zone/);
+assert.ok(food.indexOf("malatang.jpg") < food.indexOf("Dough Zone"));
 
 const escaped = context.sectionHtml({
   title: "A&B",
@@ -45,6 +45,8 @@ assert.match(chicago.blurb, /lived there for 3 years/);
 const zoo = chicago.sections.flatMap((section) => section.spots).find((spot) => spot.name === "Lincoln Park Zoo");
 assert.match(zoo.note, /just sit and read then walk around and look at animals/);
 assert.match(zoo.note, /3 times/);
+const chicagoPlaces = chicago.sections[0].spots.map((spot) => spot.name);
+assert.equal(chicagoPlaces.indexOf("Riverwalk"), chicagoPlaces.indexOf("Lincoln Park Zoo") + 1);
 assert.ok(chicago.sections.some((section) => section.title === "Museum Campus" && section.spots.length === 3));
 assert.match(home, /class="pin-name">Chicago</);
 assert.match(home, /class="pin-name">Puerto Vallarta</);
@@ -61,7 +63,26 @@ for (const city of cities) {
     }
   }
 }
-assert.equal(context.pages().length, 2);
+assert.equal(context.pages().length, 3);
+const nyc = cities.find((city) => city.slug === "nyc");
+assert.deepEqual(
+  nyc.sections[0].spots.slice(0, 4).map((spot) => spot.name),
+  ["Riverside Park", "Central Park", "Bryant Park", "High Line"],
+);
+assert.match(nyc.blurb, /summer of 2024 and 2026/);
+const broadway = nyc.sections.find((section) => section.title === "Broadway");
+assert.deepEqual(broadway.spots.map((spot) => spot.name), ["Wicked", "Book of Mormon", "Hamilton"]);
+assert.equal(broadway.spots[2].photo, "images/nyc/hamilton.jpg");
+const events = nyc.sections.find((section) => section.title === "Events");
+assert.equal(events.spots[0].name, "NYC Ballet");
+assert.ok(!events.spots.some((spot) => spot.name === "Wicked"));
+assert.ok(nyc.sections.findIndex((section) => section.title === "Broadway") < nyc.sections.findIndex((section) => section.title === "Events"));
+const nycFood = nyc.sections.find((section) => section.title === "Food");
+assert.equal(nycFood.spots[0].name, "pizza");
+assert.equal(nycFood.spots[0].note, "lucia pizza but everyone loves lindustrie");
+assert.match(nycFood.spots.find((spot) => spot.name === "chinese").note, /nai brother LiC/);
+assert.match(nycFood.spots.find((spot) => spot.name === "japanese").note, /toribro ramen/);
+assert.match(context.sectionHtml(nycFood), /<strong>pizza<\/strong><span>lucia pizza but everyone loves lindustrie<\/span>/);
 
 const cluster = [
   { left: 100, top: 80, right: 120, bottom: 100 },
